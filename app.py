@@ -6,11 +6,21 @@ from src.documents import get_all_documents, get_document_by_id
 from src.utils import compute_mock_relevance, matches_query, extract_snippet
 
 app = Flask(__name__)
-CORS(app, origins=config.Config.get_cors_origins())
+
+cors_origins = config.Config.get_cors_origins()
+CORS(app, 
+     origins=cors_origins,
+     allow_headers=['Content-Type', 'Authorization'],
+     methods=['GET', 'POST', 'OPTIONS'],
+     supports_credentials=False,
+     max_age=3600)
 
 
-@app.route('/api/generate', methods=['POST'])
+@app.route('/api/generate', methods=['POST', 'OPTIONS'])
 def generate_search_results() -> Tuple[Dict[str, Any], int]:
+    if request.method == 'OPTIONS':
+        return '', 204
+    
     try:
         data = request.get_json()
         
@@ -60,8 +70,11 @@ def generate_search_results() -> Tuple[Dict[str, Any], int]:
         return jsonify({"error": "Internal server error"}), 500
 
 
-@app.route('/api/documents/<document_id>', methods=['GET'])
+@app.route('/api/documents/<document_id>', methods=['GET', 'OPTIONS'])
 def get_document(document_id: str) -> Tuple[Dict[str, Any], int]:
+    if request.method == 'OPTIONS':
+        return '', 204
+    
     try:
         document = get_document_by_id(document_id)
         
@@ -74,8 +87,11 @@ def get_document(document_id: str) -> Tuple[Dict[str, Any], int]:
         return jsonify({"error": "Internal server error"}), 500
 
 
-@app.route('/api/health', methods=['GET'])
+@app.route('/api/health', methods=['GET', 'OPTIONS'])
 def health_check() -> Tuple[Dict[str, str], int]:
+    if request.method == 'OPTIONS':
+        return '', 204
+    
     return jsonify({"status": "ok"}), 200
 
 

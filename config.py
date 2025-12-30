@@ -13,6 +13,8 @@ class Config:
     FLASK_ENV: str = os.getenv('FLASK_ENV', 'production')
     
     @classmethod
-    def get_cors_origins(cls) -> List[str]:
+    def get_cors_origins(cls) -> str | List[str]:
+        if cls.FRONTEND_URL == '*':
+            return '*'
         origins = cls.FRONTEND_URL.split(',') if ',' in cls.FRONTEND_URL else [cls.FRONTEND_URL]
         return [origin.strip() for origin in origins]
