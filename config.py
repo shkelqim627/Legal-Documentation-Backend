@@ -8,7 +8,7 @@ load_dotenv()
 class Config:
     PORT: int = int(os.getenv('PORT', '3001'))
     HOST: str = os.getenv('HOST', '0.0.0.0')
-    FRONTEND_URL: str = os.getenv('FRONTEND_URL', 'http://localhost:3000')
+    FRONTEND_URL: str = os.getenv('FRONTEND_URL', '*')
     DEBUG: bool = os.getenv('DEBUG', 'False').lower() == 'true'
     FLASK_ENV: str = os.getenv('FLASK_ENV', 'production')
     
